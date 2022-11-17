@@ -150,7 +150,14 @@ data <- data.frame(
   value=edu_1_total
 )
 
-data
+md <- data.frame(
+  Less_than_high_school = 0.02743142,
+  High_school_or_GED = 	0.13216958,
+  Some_college_or_technical_school = 0.23940150,
+  College_degree_or_higher = 0.60099751,
+  group = "not received"
+)
+md
 ```
 
 ```{r}
@@ -162,40 +169,44 @@ edu_2_3 = length(which(md12$edu == 3))/n
 edu_2_4 = length(which(md12$edu == 4))/n
 
 edu_2_total = c(edu_2_1,edu_2_2,edu_2_3,edu_2_4)
-edu_2_name = c("Less than high school","High school or GED","Some college or technical school","College degree or higher")
 
-data <- data.frame(
-  group=edu_2_name,
-  value=edu_2_total
-)
 
-# piechart
-ggplot(data, aes(x="", y=value, fill=group)) +
-  ggtitle("Received needed health care (or did not need health care)")+
-  geom_bar(stat="identity", width=1, color="white") +
-  coord_polar("y", start=0)+
-  scale_fill_brewer(palette="Set3")
+md[2,] = c(edu_2_1,edu_2_2,edu_2_3,edu_2_4,"Received")
+
+
+md2 <- mutate_all(md, function(x) as.numeric(as.character(x)))
+md2
 ```
 
 ```{r}
-# alternative pie chart
-# Compute the position of labels
-data <- data %>% 
-  arrange(desc(group)) %>%
-  mutate(prop = value / sum(data$value) *100) %>%
-  mutate(ypos = cumsum(prop)- 0.5*prop )
-
-# Basic piechart
-ggplot(data, aes(x="", y=prop, fill=group)) +
-  geom_bar(stat="identity", width=1, color="white") +
-  coord_polar("y", start=0) +
-  theme(legend.position="none") +
-  
-  geom_text(aes(y = ypos, label = group), color = "black", size=3) +
-  scale_fill_brewer(palette="Set3")
+w <-c(0.02743142,0.1321696,0.2394015,0.6009975,0.02085747,0.1147161,0.2069122,0.6575142)
+df2 <- data.frame(supp=rep(c("not receive", "received"), each=4),
+                dose=rep(c("Less_than_high_school", "High_school_or_GED", "Some_college_or_technical_school","College_degree_or_higher"),2),
+                len=w)
 ```
 
-Description & Interpretation:
+
+```{r}
+# Stacked barplot with multiple groups
+ggplot(data=df2, aes(x=dose, y=len, fill=supp)) +
+  geom_bar(stat="identity")
+# Use position=position_dodge()
+ggplot(data=df2, aes(x=dose, y=len, fill=supp)) +
+geom_bar(stat="identity", position=position_dodge())
+```
+
+```{r}
+a <- nrow(YES)
+b <- nrow(NO)
+md2[1,] = md2[1,]*a
+md2[2,] = md2[1,]*b
+
+rownames(md2) = c("NotReceived" , "Received")
+kable(md2)
+
+```
+
+
 
 #Plot2
 
@@ -262,267 +273,3 @@ ggplot(data, aes(fill=Group, y=Ratio, x=Public_Utilities)) +
     geom_bar(position="dodge", stat="identity")
 ```
 
-Description & Interpretation:
-
-#Plot3
-
-```{r}
-# hike_data <- readr::read_rds(url('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-11-24/hIke_data.rds'))
-hike_data$region <- as.factor(word(hike_data$location, 1, sep = " -- "))
-hike_data$length_num <- as.numeric(sapply(strsplit(hike_data$length, " "), "[[", 1))
-
-plot_df <- hike_data %>%
-  group_by(region) %>%
-  summarise(
-    sum_length = sum(length_num),
-    mean_gain = mean(as.numeric(gain)),
-    n = n()
-  ) %>%
-  mutate(mean_gain = round(mean_gain, digits = 0))
-
-
-plt <- plt +
-  # Annotate the bars and the lollipops so the reader understands the scaling
-  annotate(
-    x = 11, 
-    y = 1300,
-    label = "Mean Elevation Gain\n[FASL]",
-    geom = "text",
-    angle = -67.5,
-    color = "gray12",
-    size = 2.5,
-    family = "Bell MT"
-  ) +
-  annotate(
-    x = 11, 
-    y = 3150,
-    label = "Cummulative Length [FT]",
-    geom = "text",
-    angle = 23,
-    color = "gray12",
-    size = 2.5,
-    family = "Bell MT"
-  ) +
-  # Annotate custom scale inside plot
-  annotate(
-    x = 11.7, 
-    y = 1100, 
-    label = "1000", 
-    geom = "text", 
-    color = "gray12", 
-    family = "Bell MT"
-  ) +
-  annotate(
-    x = 11.7, 
-    y = 2100, 
-    label = "2000", 
-    geom = "text", 
-    color = "gray12", 
-    family = "Bell MT"
-  ) +
-  annotate(
-    x = 11.7, 
-    y =3100, 
-    label = "3000", 
-    geom = "text", 
-    color = "gray12", 
-    family = "Bell MT"
-  ) +
-  # Scale y axis so bars don't start in the center
-  scale_y_continuous(
-    limits = c(-1500, 3500),
-    expand = c(0, 0),
-    breaks = c(0, 1000, 2000, 3000)
-  ) + 
-  # New fill and legend title for number of tracks per region
-  scale_fill_gradientn(
-    "Amount of Tracks",
-     colours = c( "#6C5B7B","#C06C84","#F67280","#F8B195")
-  ) +
-  # Make the guide for the fill discrete
-  guides(
-    fill = guide_colorsteps(
-      barwidth = 15, barheight = .5, title.position = "top", title.hjust = .5
-    )
-  ) +
-  theme(
-    # Remove axis ticks and text
-    axis.title = element_blank(),
-    axis.ticks = element_blank(),
-    axis.text.y = element_blank(),
-    # Use gray text for the region names
-    axis.text.x = element_text(color = "gray12", size = 12),
-    # Move the legend to the bottom
-    legend.position = "bottom",
-  )
-
-plt
-
-```
-
-```{r}
-plt <- ggplot(plot_df) +
-  # Make custom panel grid
-  geom_hline(
-    aes(yintercept = y), 
-    data.frame(y = c(0:3) * 1000),
-    color = "lightgrey"
-  ) + 
-  # Add bars to represent the cumulative track lengths
-  # str_wrap(region, 5) wraps the text so each line has at most 5 characters
-  # (but it doesn't break long words!)
-  geom_col(
-    aes(
-      x = reorder(str_wrap(region, 5), sum_length),
-      y = sum_length,
-      fill = n
-    ),
-    position = "dodge2",
-    show.legend = TRUE,
-    alpha = .9
-  ) +
-  
-  # Add dots to represent the mean gain
-  geom_point(
-    aes(
-      x = reorder(str_wrap(region, 5),sum_length),
-      y = mean_gain
-    ),
-    size = 3,
-    color = "gray12"
-  ) +
-  
-  # Lollipop shaft for mean gain per region
-  geom_segment(
-    aes(
-      x = reorder(str_wrap(region, 5), sum_length),
-      y = 0,
-      xend = reorder(str_wrap(region, 5), sum_length),
-      yend = 3000
-    ),
-    linetype = "dashed",
-    color = "gray12"
-  ) + 
-  
-  # Make it circular!
-  coord_polar()
-
-plt
-```
-
-Description & Interpretation:
-
-#Plot4
-
-```{r}
-
-get_prop <- function(vec){
-  mc <- vec
-  mdex <- which(mc == 99)
-  w <- mc[-mdex]
-  w = w-1
-  p = 1-sum(w)/length(w)
-  return(p)
-}
-
-
-ydeaf <- YES$K2Q43B
-ndeaf <- NO$K2Q43B
-
-yblind <- YES$BLINDNESS
-nblind <- NO$BLINDNESS
-
-yars<- YES$ARTHRITIS
-nars <- NO$ARTHRITIS
-
-yasthma<- YES$K2Q40A
-nasthma <- NO$K2Q40A
-
-
-ydiabetes<- YES$K2Q41A
-ndiabetes <- NO$K2Q41A
-
-
-cont <- c(get_prop(ydeaf),get_prop(ndeaf),
-          get_prop(yblind),get_prop(nblind),
-          get_prop(yars),get_prop(nars),
-          get_prop(yasthma),get_prop(nasthma),
-          get_prop(ydiabetes),get_prop(ndiabetes)) # bycol
-
- 
-# Create data: note in High school for several students
-data <- as.data.frame(matrix( cont , ncol=5,byrow = FALSE))
-colnames(data) <- c("deaf" , "blind" , "Arthritis" , "Asthma" , "Diabetes" )
-rownames(data) <- c("a" , "b")
-
-```
-
-```{r}
-data = data*100
-
-data
-```
-
-```{r,warning=FALSE}
-# Library
-library(fmsb)
-
- 
-# To use the fmsb package, I have to add 2 lines to the dataframe: the max and min of each variable to show on the plot!
-data <- rbind(rep(12,5) , rep(0,5) , data)
- 
-# Set graphic colors
-library(RColorBrewer)
-coul <- brewer.pal(3, "BuPu")
-colors_border <- coul
-library(scales)
-colors_in <- alpha(coul,0.3)
-
-# If you remove the 2 first lines, the function compute the max and min of each variable with the available data:
-radarchart( data[-c(1,2),]  , axistype=0 , maxmin=F,
-    #custom polygon
-    pcol=colors_border , pfcol=colors_in , plwd=4 , plty=1,
-    #custom the grid
-    cglcol="red", cglty=1, axislabcol="grey", cglwd=0.8, 
-    #custom labels
-    vlcex=0.8 
-    )
-
-# Add a legend
-legend(x=0.7, y=1, legend = rownames(data[-c(1,2),]), bty = "n", pch=20 , col=colors_in , text.col = "black", cex=1.2, pt.cex=3)
-
-```
-
-```{r}
-
-# Custom the radarChart !
-radarchart( data  , axistype=1 , 
- 
-    #custom polygon
-    pcol=rgb(0.2,0.5,0.5,0.9) , pfcol=rgb(0.2,0.5,0.5,0.5) , plwd=4 , 
- 
-    #custom the grid
-    cglcol="grey", cglty=1, axislabcol="grey", caxislabels=seq(0,20,5), cglwd=0.8,
- 
-    #custom labels
-    vlcex=0.8 
-    )
-```
-
-Description & Interpretation:
-
-#Plot5
-
-```{r}
-
-```
-
-Description & Interpretation:
-
-#Plot6
-
-```{r}
-
-```
-
-Description & Interpretation:

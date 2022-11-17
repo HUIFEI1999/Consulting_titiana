@@ -7,7 +7,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Enviroment
+In this section of the report, we focus on the factors that influence whether children are getting the health cares they need. We will be using the dataset :2019-2020 National Survey of Children's Health (NSCH) from
+
+<https://www.childhealthdata.org/dataset/download?rq=11786>
+
+## Section Enviroment; package used for this setcion
 
 ```{r}
 # Library(???)
@@ -18,18 +22,87 @@ library(xtable)
 library(dplyr)
 library(ggplot2)
 library(stringr)
+library(knitr)
+```
+
+We will interested in childrens under the age of 5, so we subset the dataset and have a summary statistic to preview it.
+
+```{r}
+# read file
+NSCH <- read_csv("2019-2020 NSCH_Topical_CAHMI_DRC_v1.2.csv")
+
+# 5 year age
+n5 <- length(which(NSCH$SC_AGE_YEARS <=5))
+nother <- nrow(NSCH)-n5
+NSCH <- subset(NSCH,SC_AGE_YEARS <=5)
+
+```
+
+```{r}
+data <- data.frame(
+  category=c("Age 5 or younger", "Others"),
+  count=c(n5, nother)
+)
+ 
+# Compute percentages
+data$fraction <- data$count / sum(data$count)
+
+# Compute the cumulative percentages (top of each rectangle)
+data$ymax <- cumsum(data$fraction)
+
+# Compute the bottom of each rectangle
+data$ymin <- c(0, head(data$ymax, n=-1))
+
+# Compute label position
+data$labelPosition <- (data$ymax + data$ymin) / 2
+
+# Compute a good label
+data$label <- paste0(data$category, "\n value: ", data$count)
+
+# Make the plot
+ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  geom_rect() +
+  geom_label( x=3.5, aes(y=labelPosition, label=label), size=6) +
+  scale_fill_brewer(palette=4) +
+  coord_polar(theta="y") +
+  xlim(c(2, 4)) +
+  theme_void() +
+  theme(legend.position = "none")
 ```
 
 ```{r}
 
-NSCH <- read_csv("NSCH1920.csv")
+length(which(NSCH$K4Q27 == 99))
 
-NSCH <- subset(NSCH,SC_AGE_YEARS <=5)
 NSCH <- subset(NSCH, K4Q27 != 99)
 
+```
+
+For Question: During the past 12 months, was there any time when this child needed
+
+health care but it was not received?
+
+```{r,results = 'asis'}
 YES <- subset(NSCH,K4Q27 == 1)
 NO <- subset(NSCH,K4Q27 == 2)
+Missing <- subset(NSCH,K4Q27 == 99)
+
+nyes = nrow(YES)
+nno = nrow(NO)
+nomiss = nrow(Missing)
+
+# Create test data.
+data <- data.frame(
+  category=c("Received", "Not Received", "Missing"),
+  count=c(nyes, nno, nomiss)
+)
+
+data$fraction = y = formatC(data$count/ sum(data$count), digits = 2, format = "f")
+ 
+kable(data,caption = "Answer Sumary")
+
 ```
+
 ```{r}
 y <- NSCH$K4Q27
 unique(NSCH$K4Q27)
@@ -41,8 +114,8 @@ length(which(y == 99))
 # 99 "Missing".
 ```
 
-
 #Plot1 - parent educ
+
 ```{r}
 edu <- NSCH$AdultEduc_1920
 # 1 "Less than high school"
@@ -57,8 +130,6 @@ sex <- NSCH$sex_1920
 md1 <- data.frame(y,edu,sex)
 
 ```
-
-
 
 ```{r}
 md11 <- subset(md1,y ==1)
@@ -79,12 +150,7 @@ data <- data.frame(
   value=edu_1_total
 )
 
-# piechart
-ggplot(data, aes(x="", y=value, fill=group)) +
-  ggtitle("Did not receive needed health care")+
-  geom_bar(stat="identity", width=1, color="white") +
-  coord_polar("y", start=0)+
-  scale_fill_brewer(palette="Set2")
+data
 ```
 
 ```{r}
@@ -111,7 +177,6 @@ ggplot(data, aes(x="", y=value, fill=group)) +
   scale_fill_brewer(palette="Set3")
 ```
 
-
 ```{r}
 # alternative pie chart
 # Compute the position of labels
@@ -130,13 +195,10 @@ ggplot(data, aes(x="", y=prop, fill=group)) +
   scale_fill_brewer(palette="Set3")
 ```
 
-
-
 Description & Interpretation:
 
-
-
 #Plot2
+
 ```{r}
 
 park <- NSCH$park_1920
@@ -162,7 +224,6 @@ NbhdAmenities <- NSCH$NbhdAmenities_1920
 md2 <- data.frame(y,park,RecCentr,library,NbhdAmenities)
 
 ```
-
 
 ```{r}
 # drop all missing values
@@ -190,9 +251,6 @@ value[5] = 1-sum(yes2$library)/nrow(yes2)
 value[6] = 1-sum(no2$library)/nrow(no2)
 ```
 
-
-
-
 ```{r}
 # create a dataset
 Public_Utilities <- c(rep("park" , 2) , rep("library" , 2) , rep("recreation center" , 2) )
@@ -205,8 +263,6 @@ ggplot(data, aes(fill=Group, y=Ratio, x=Public_Utilities)) +
 ```
 
 Description & Interpretation:
-
-
 
 #Plot3
 
@@ -304,7 +360,6 @@ plt
 
 ```
 
-
 ```{r}
 plt <- ggplot(plot_df) +
   # Make custom panel grid
@@ -355,13 +410,9 @@ plt <- ggplot(plot_df) +
 plt
 ```
 
-
 Description & Interpretation:
 
-
-
 #Plot4
-
 
 ```{r}
 
@@ -412,8 +463,6 @@ data = data*100
 data
 ```
 
-
-
 ```{r,warning=FALSE}
 # Library
 library(fmsb)
@@ -443,6 +492,7 @@ radarchart( data[-c(1,2),]  , axistype=0 , maxmin=F,
 legend(x=0.7, y=1, legend = rownames(data[-c(1,2),]), bty = "n", pch=20 , col=colors_in , text.col = "black", cex=1.2, pt.cex=3)
 
 ```
+
 ```{r}
 
 # Custom the radarChart !
@@ -459,61 +509,20 @@ radarchart( data  , axistype=1 ,
     )
 ```
 
-
-
-
-
 Description & Interpretation:
-
-
 
 #Plot5
+
 ```{r}
 
 ```
 
 Description & Interpretation:
-
-
 
 #Plot6
+
 ```{r}
 
 ```
 
 Description & Interpretation:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

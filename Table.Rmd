@@ -1,9 +1,3 @@
----
-title: "table"
-author: "Xu Luo"
-date: "2022-11-18"
-output: html_document
----
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -11,45 +5,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Load the package
 
-```{r,warning=FALSE}
+```{r,warning=FALSE,message=FALSE}
 library(tidyverse)
 library(magrittr)
 library(ggplot2)
 library(knitr)
 library(scales)
-```
-
-## Read the Data Set and filter children under 5
-
-```{r,eval=FALSE}
-health_all <- read.csv("2019-2020 NSCH_Topical_CAHMI_DRC_v1.2.csv")
-health <- health_all %>% filter(SC_AGE_YEARS <= 5)
-
-```
-
-## EDA for independent variable: park_1920
-
-```{r,eval=FALSE}
-# EDA for park amenties.
-
-num_with_park <- sum(health$park_1920 == "1")
-num_without_park  <- sum(health$park_1920 == "2")
-num_missing_park <- sum(health$park_1920 == "99")
-
-park_ornot <- data.frame(
-  group = c("YES", "NO", "MISSING"),
-  count = c(num_with_park, num_without_park, num_missing_park)
-  )
-park_ornot
-
-# calculate the percentage:
-per_park <- park_ornot$count / sum(park_ornot$count)
-per_park <- label_percent()(per_park)
-
-park_ornot1 <- park_ornot %>%
-  mutate(park_ornot, percentage = c(per_park))
-
-kable(park_ornot1,caption = "Percentage Sumary")
 ```
 
 ## Read the Data Set and filter children under 5
@@ -77,9 +38,47 @@ NSCH\$[Variable labels]
 
 [Variable labels] can be found on the Variable labels EXcel Form; and some of the Variables that we are most interesd is listed below:
 
-SC_AGE_YEARS \~ Age of Selected Child - In Years SC_SEX \~ Sex of Selected Child SC_RACE_R \~ Race of Selected Child, Detailed SC_HISPANIC_R \~ Hispanic Origin of Selected Child, Recode SC_CSHCN \~ Special Health Care Needs Status of Selected Child HIGRADE \~ Highest Level of Education among Reported Adults sex_1920 \~ Sex of child hispanic_1920 \~ Hispanic origin of the child PrntNativity_1920 \~ Generational status of the parents HHLanguage_1920 \~ Primary language spoken in the household povlev4_1920 \~ Income based on federal poverty level status BornUSA_1920 \~ Children who were born in the United States NbhdSupp_1920 \~ Indicator 7.1: Children who live in supportive neighborhood NbhdSafe_1920 \~ Indicator 7.2: Children live in safe neighborhoods park_1920 \~ Children who live in neighborhoods with a park or playground RecCentr_1920 \~ Children who live in neighborhoods with recreation center, community center or boys' and girls' club library_1920 \~ Children who live in neighborhoods with a library or bookmobile NbhdAmenities_1920 \~ Indicator 7.4: Count of amenities in children's neighborhoods
+SC_AGE_YEARS \~ Age of Selected Child - In Years 
 
-K4Q27 \~ Needed Health Care Not Received K5Q10 \~ Need a Referral DevScrnng_1920 \~ Indicator 4.10: Children who received a developmental screening using a parent-completed screening tool, age 9-35 months
+SC_SEX \~ Sex of Selected Child 
+
+SC_RACE_R \~ Race of Selected Child, Detailed 
+
+SC_HISPANIC_R \~ Hispanic Origin of Selected Child, Recode 
+
+SC_CSHCN \~ Special Health Care Needs Status of Selected Child 
+
+HIGRADE \~ Highest Level of Education among Reported Adults 
+
+sex_1920 \~ Sex of child 
+
+hispanic_1920 \~ Hispanic origin of the child 
+
+PrntNativity_1920 \~ Generational status of the parents 
+
+HHLanguage_1920 \~ Primary language spoken in the household 
+
+povlev4_1920 \~ Income based on federal poverty level status 
+
+BornUSA_1920 \~ Children who were born in the United States 
+
+NbhdSupp_1920 \~ Indicator 7.1: Children who live in supportive neighborhood 
+
+NbhdSafe_1920 \~ Indicator 7.2: Children live in safe neighborhoods 
+
+park_1920 \~ Children who live in neighborhoods with a park or playground 
+
+RecCentr_1920 \~ Children who live in neighborhoods with recreation center, community center or boys' and girls' club 
+
+library_1920 \~ Children who live in neighborhoods with a library or bookmobile 
+
+NbhdAmenities_1920 \~ Indicator 7.4: Count of amenities in children's neighborhoods
+
+K4Q27 \~ Needed Health Care Not Received 
+
+K5Q10 \~ Need a Referral 
+
+DevScrnng_1920 \~ Indicator 4.10: Children who received a developmental screening using a parent-completed screening tool, age 9-35 months
 
 ```{r}
 #this function RETURN A tibble 
@@ -103,65 +102,152 @@ single_table <- function(Code_index){
 
 # Needed Health Care Not Received - K4Q27
 
+# Independent Variables
+
+# Age of children:SC_AGE_YEARS
 
 ```{r}
+Answer<- c("Under 1 year old", " 1 year old" , " 2 year old", "3 year old", "4 year old", "5 year old")
+kable(cbind(single_table(NSCH$SC_AGE_YEARS),Answer),caption = "Age of Selected Child - In Years")
+```
 
-Answer<- c("YES", "NO" , "MISSING")
-kable(cbind(single_table(NSCH$K4Q27),Answer),caption = "Needed Health Care Not Received")
+# Gender of Children:SC_SEX
+
+```{r}
+Answer = c("Male","Female")
+kable(cbind(single_table(NSCH$SC_SEX),Answer),caption = "Gender of Children, Detailed")
 
 ```
 
+# Race of Children:SC_RACE_R
 
+```{r}
 
+Answer <- c("Hispanic", "White, non-Hispanic", "Black, non-Hispanic" , "Asian, non-Hispanic" ,"American Indian or Alaska Native Non-Hispanic", "Multi-Race Non-Hispanic")
+kable(cbind(single_table(NSCH$SC_RACE_R),Answer),caption = "Race of Children, detailed")
 
+```
 
+# Hispanic Children:SC_HISPANIC_R
 
+```{r}
 
+Answer = c("Hispanic", "Non-Hispanic ")
+kable(cbind(single_table(NSCH$SC_HISPANIC_R),Answer),caption = "Hispanic Origin of Selected Child")
+```
 
+# Special Health needs: SC_CSHCN
 
+```{r}
+kable(cbind(single_table(NSCH$SC_CSHCN)),caption = "Special Health Care Needs Status of Selected Child")
+```
 
+# Highest Level of Education among Reported Adults: HIGRADE
 
+```{r}
+kable(cbind(single_table(NSCH$HIGRADE)),caption = "Highest Level of Education among Reported Adults")
+```
 
+# sex of children? : sex_1920
 
+```{r}
+kable(cbind(single_table(NSCH$sex_1920)),caption = "sex of children")
+```
 
+#Hispanic origin of the child：hispanic_1920
 
+```{r}
+kable(cbind(single_table(NSCH$hispanic_1920)),caption = "Hispanic origin of the child")
+```
 
+# Generational status of the parents： PrntNativity_1920
 
+```{r}
+kable(cbind(single_table(NSCH$PrntNativity_1920)),caption = "Generational status of the parents")
+```
 
+# Primary language spoken in the household
 
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$HHLanguage_1920),Answer),caption = "Primary language spoken in the household")
+```
 
+#Income above poverty: povlev4_1920
 
+```{r}
+kable(cbind(single_table(NSCH$povlev4_1920)),caption = "Income based on federal poverty level status")
+```
 
+# Children who were born in the United States: BornUSA_1920
 
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$BornUSA_1920),Answer),caption = "Children who were born in the United States")
+```
 
+# Children who live in supportive neighborhood:NbhdSupp_1920
 
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$NbhdSupp_1920),Answer),caption = "Indicator 7.1: Children who live in supportive neighborhood")
+```
 
+# Children live in safe neighborhoods: NbhdSafe_1920
 
+```{r}
+kable(cbind(single_table(NSCH$NbhdSafe_1920)),caption = "Indicator 7.2: Children live in safe neighborhoods")
+```
 
+# Children who live in neighborhoods with a park or playground: park_1920
 
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$park_1920),Answer),caption = "Children who live in neighborhoods with a park or playground")
+```
 
+# Children who live in neighborhoods with recreation center, community center or boys' and girls' club:
 
+# RecCentr_1920
 
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$RecCentr_1920),Answer),caption = "Children who live in neighborhoods with recreation center, community center or boys’ and girls’ club")
+```
 
+# Children who live in neighborhoods with a library or bookmobile: library_1920
 
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$library_1920),Answer),caption = "Children who live in neighborhoods with a library or bookmobile")
+```
 
+# Count of amenities in children's neighborhoods: NbhdAmenities_1920
 
+```{r}
+kable(cbind(single_table(NSCH$NbhdAmenities_1920)),caption = "Indicator 7.4: Count of amenities in children's neighborhoods")
+```
 
+# Outcome Variable
 
+# Needed Health Care Not Received: K4Q27
 
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$K4Q27),Answer),caption = "Needed Health Care Not Received")
+```
 
+# Need a Referral: K5Q10
 
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$K5Q10),Answer),caption = "Need a Referral")
+```
 
+# Children who received a developmental screening using a parent-completed
 
+# screening tool, age 9-35 months: DevScrnng_1920
 
-
-
-
-
-
-
-
-
-
-
-
+```{r}
+kable(cbind(single_table(NSCH$DevScrnng_1920)),caption = "Screen")
+```

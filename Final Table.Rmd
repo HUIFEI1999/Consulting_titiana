@@ -51,11 +51,9 @@ SC_HISPANIC_R \~ Hispanic Origin of Selected Child, Recode
 
 SC_CSHCN \~ Special Health Care Needs Status of Selected Child
 
-HIGRADE \~ Highest Level of Education among Reported Adults
+AdultEduc_1920 \~ Highest Level of Education among Reported Adults
 
 sex_1920 \~ Sex of child
-
-hispanic_1920 \~ Hispanic origin of the child
 
 PrntNativity_1920 \~ Generational status of the parents
 
@@ -135,7 +133,7 @@ kable(cbind(single_table(NSCH$SC_RACE_R),Answer),caption = "Race of Children, de
 
 ```{r}
 
-Answer = c("Hispanic", "Non-Hispanic ")
+Answer = c("Hispanic", "Non-Hispanic")
 kable(cbind(single_table(NSCH$SC_HISPANIC_R),Answer),caption = "Hispanic Origin of Selected Child")
 ```
 
@@ -146,7 +144,7 @@ Answer = c("CSHCN","Non-CSHCN")
 kable(cbind(single_table(NSCH$SC_CSHCN),Answer),caption = "Special Health Care Needs Status of Selected Child")
 ```
 
-# ??????????????Highest Level of Education among Reported Adults: HIGRADE
+# Highest Level of Education among Reported Adults: AdultEduc_1920
 
 ```{r}
 Answer <- c("Less than high school","High school or GED","Some college or technical School","College degree or higher")
@@ -158,12 +156,6 @@ kable(cbind(single_table(NSCH$AdultEduc_1920),Answer),caption = "Highest Level o
 ```{r}
 Answer = c("Male", "Female")
 kable(cbind(single_table(NSCH$sex_1920),Answer),caption = "sex of children")
-```
-
-#Hispanic origin of the child：hispanic_1920
-
-```{r}
-kable(cbind(single_table(NSCH$hispanic_1920)),caption = "Hispanic origin of the child")
 ```
 
 # Generational status of the parents： PrntNativity_1920

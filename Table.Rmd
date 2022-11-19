@@ -55,27 +55,93 @@ kable(park_ornot1,caption = "Percentage Sumary")
 ## Read the Data Set and filter children under 5
 
 ```{r}
+#read and import the csv file
 NSCH_ALL <- read.csv("2019-2020 NSCH_Topical_CAHMI_DRC_v1.2.csv")
+#subset to only have children no above age of 5
 NSCH <- NSCH_ALL %>% filter(SC_AGE_YEARS <= 5)
 ```
 
 ## function
-```{r}
 
+The function single_table(input) returns a tibble includes:
+
+"Code_index": which is the coding Substitute value, typically: "1" refers to "YES", "2" refers to "NO", "99" refers to "Missing" and "95" refers to "No Answer";
+
+"Counts": the absolute value of number of counts; "Proportion": represents the proportion of this response category in the overall sample; "Percentage": Proportional response into percentage.
+
+This is a reusable function that can be used to obtain a summary table of all factors by entering different vectors.
+
+The format of the input is as follows:
+
+NSCH\$[Variable labels]
+
+[Variable labels] can be found on the Variable labels EXcel Form; and some of the Variables that we are most interesd is listed below:
+
+SC_AGE_YEARS \~ Age of Selected Child - In Years SC_SEX \~ Sex of Selected Child SC_RACE_R \~ Race of Selected Child, Detailed SC_HISPANIC_R \~ Hispanic Origin of Selected Child, Recode SC_CSHCN \~ Special Health Care Needs Status of Selected Child HIGRADE \~ Highest Level of Education among Reported Adults sex_1920 \~ Sex of child hispanic_1920 \~ Hispanic origin of the child PrntNativity_1920 \~ Generational status of the parents HHLanguage_1920 \~ Primary language spoken in the household povlev4_1920 \~ Income based on federal poverty level status BornUSA_1920 \~ Children who were born in the United States NbhdSupp_1920 \~ Indicator 7.1: Children who live in supportive neighborhood NbhdSafe_1920 \~ Indicator 7.2: Children live in safe neighborhoods park_1920 \~ Children who live in neighborhoods with a park or playground RecCentr_1920 \~ Children who live in neighborhoods with recreation center, community center or boys' and girls' club library_1920 \~ Children who live in neighborhoods with a library or bookmobile NbhdAmenities_1920 \~ Indicator 7.4: Count of amenities in children's neighborhoods
+
+K4Q27 \~ Needed Health Care Not Received K5Q10 \~ Need a Referral DevScrnng_1920 \~ Indicator 4.10: Children who received a developmental screening using a parent-completed screening tool, age 9-35 months
+
+```{r}
+#this function RETURN A tibble 
 single_table <- function(Code_index){
-mt <- tibble(Code_index)
-ans <- mt %>% count(Code_index)%>%arrange() %>% mutate(Propotion = n / sum(n)) 
-w <- ans$Propotion
-Percentage <- label_percent()(w)
-ans$Percentage <- Percentage
-colnames(ans)[2] <- "Counts"
-return(ans)
+  mt <- tibble(Code_index)
+  
+  ans <- mt %>% 
+    count(Code_index) %>%
+    arrange() %>% 
+    mutate(Proportion = n / sum(n)) 
+
+  w <- ans$Proportion
+  Percentage <- label_percent()(w)
+  ans$Percentage <- Percentage
+  colnames(ans)[2] <- "Counts"
+
+  return(ans)
 }
 
-
-#test on park
-single_table(NSCH$park_1920)
 ```
+
+# Needed Health Care Not Received - K4Q27
+
+
+```{r}
+
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$K4Q27),Answer),caption = "Needed Health Care Not Received")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Load the package
 
-```{r}
+```{r,warning=FALSE}
 library(tidyverse)
 library(magrittr)
 library(ggplot2)
@@ -20,14 +20,15 @@ library(scales)
 ```
 
 ## Read the Data Set and filter children under 5
+
 ```{r}
 health_all <- read.csv("2019-2020 NSCH_Topical_CAHMI_DRC_v1.2.csv")
 health <- health_all %>% filter(SC_AGE_YEARS <= 5)
 
 ```
 
-
 ## EDA for independent variable: park_1920
+
 ```{r}
 # EDA for park amenties.
 
@@ -51,124 +52,30 @@ park_ornot1 <- park_ornot %>%
 kable(park_ornot1,caption = "Percentage Sumary")
 ```
 
+## Read the Data Set and filter children under 5
+
+```{r}
+NSCH_ALL <- read.csv("2019-2020 NSCH_Topical_CAHMI_DRC_v1.2.csv")
+NSCH <- NSCH_ALL %>% filter(SC_AGE_YEARS <= 5)
+```
 
 ## function
 ```{r}
 
-
-
-single_table <- function(md){
-mt <- tibble(md)
-ans <- mt %>% count(md)%>%arrange() %>% mutate(propotion = n / sum(n))
+single_table <- function(Code_index){
+mt <- tibble(Code_index)
+ans <- mt %>% count(Code_index)%>%arrange() %>% mutate(Propotion = n / sum(n)) 
+w <- ans$Propotion
+Percentage <- label_percent()(w)
+ans$Percentage <- Percentage
+colnames(ans)[2] <- "Counts"
 return(ans)
 }
 
+
 #test on park
-single_table(health$park_1920)
+single_table(NSCH$park_1920)
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

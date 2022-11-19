@@ -21,7 +21,7 @@ library(scales)
 
 ## Read the Data Set and filter children under 5
 
-```{r}
+```{r,eval=FALSE}
 health_all <- read.csv("2019-2020 NSCH_Topical_CAHMI_DRC_v1.2.csv")
 health <- health_all %>% filter(SC_AGE_YEARS <= 5)
 
@@ -29,7 +29,7 @@ health <- health_all %>% filter(SC_AGE_YEARS <= 5)
 
 ## EDA for independent variable: park_1920
 
-```{r}
+```{r,eval=FALSE}
 # EDA for park amenties.
 
 num_with_park <- sum(health$park_1920 == "1")

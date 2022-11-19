@@ -103,18 +103,72 @@ single_table <- function(Code_index){
 
 # Needed Health Care Not Received - K4Q27
 
+# Independent Variables
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$SC_AGE_YEARS),Answer),caption = "Age of Selected Child - In Years")
+```
+
 
 ```{r}
 
 Answer<- c("YES", "NO" , "MISSING")
-kable(cbind(single_table(NSCH$K4Q27),Answer),caption = "Needed Health Care Not Received")
+kable(cbind(single_table(NSCH$SC_RACE_R),Answer),caption = "Race of Selected Child, Detailed")
 
 ```
 
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$HHLanguage_1920),Answer),caption = "Primary language spoken in the household")
+```
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$BornUSA_1920),Answer),caption = "Children who were born in the United States")
+```
 
 
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$NbhdSupp_1920),Answer),caption = "Indicator 7.1: Children who live in supportive neighborhood")
+```
+
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$park_1920),Answer),caption = "Children who live in neighborhoods with a park or playground")
+```
+
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$RecCentr_1920),Answer),caption = "Children who live in neighborhoods with recreation center, community center or boys’ and girls’ club")
+```
+
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$library_1920),Answer),caption = "Children who live in neighborhoods with a library or bookmobile")
+```
 
 
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$NbhdAmenities_1920),Answer),caption = "Indicator 7.4: Count of amenities in children's neighborhoods")
+```
+
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$SC_AGE_YEARS),Answer),caption = "Age of Selected Child - In Years")
+```
+
+
+# Outcome Variable
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$K4Q27),Answer),caption = "Needed Health Care Not Received")
+```
+
+```{r}
+Answer<- c("YES", "NO" , "MISSING")
+kable(cbind(single_table(NSCH$K5Q10),Answer),caption = "Need a Referral")
+```
 
 
 

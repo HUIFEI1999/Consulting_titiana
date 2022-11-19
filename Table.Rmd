@@ -139,19 +139,22 @@ kable(cbind(single_table(NSCH$SC_HISPANIC_R),Answer),caption = "Hispanic Origin 
 # Special Health needs: SC_CSHCN
 
 ```{r}
-kable(cbind(single_table(NSCH$SC_CSHCN)),caption = "Special Health Care Needs Status of Selected Child")
+Answer = c("With Needs", "Without Needs") 
+kable(cbind(single_table(NSCH$SC_CSHCN), Answer),caption = "Special Health Care Needs Status of Selected Child")
 ```
 
 # Highest Level of Education among Reported Adults: HIGRADE
 
 ```{r}
-kable(cbind(single_table(NSCH$HIGRADE)),caption = "Highest Level of Education among Reported Adults")
+Answer = c("Less than high school", "High school or GED", "Some college or technical school" )
+kable(cbind(single_table(NSCH$HIGRADE),Answer),caption = "Highest Level of Education among Reported Adults")
 ```
 
 # sex of children? : sex_1920
 
 ```{r}
-kable(cbind(single_table(NSCH$sex_1920)),caption = "sex of children")
+Answer = c("Male","Female")
+kable(cbind(single_table(NSCH$sex_1920),Answer),caption = "sex of children")
 ```
 
 #Hispanic origin of the child：hispanic_1920
@@ -163,26 +166,30 @@ kable(cbind(single_table(NSCH$hispanic_1920)),caption = "Hispanic origin of the 
 # Generational status of the parents： PrntNativity_1920
 
 ```{r}
-kable(cbind(single_table(NSCH$PrntNativity_1920)),caption = "Generational status of the parents")
+Answer<- c("All parents born in the U.S."
+, "Any parent born outside of the U.S." , "Other (child born in U.S., parents are not listed)","Missing")
+kable(cbind(single_table(NSCH$PrntNativity_1920),Answer),caption = "Generational status of the parents")
 ```
 
-# Primary language spoken in the household
+# Primary language spoken in the household:HHLanguage_1920
 
 ```{r}
-Answer<- c("YES", "NO" , "MISSING")
+Answer<- c("English", "Other than English" , "MISSING")
 kable(cbind(single_table(NSCH$HHLanguage_1920),Answer),caption = "Primary language spoken in the household")
 ```
 
 #Income above poverty: povlev4_1920
 
 ```{r}
-kable(cbind(single_table(NSCH$povlev4_1920)),caption = "Income based on federal poverty level status")
+Answer<- c("0-99% FPL",  "100-199% FPL" , "200-399% FPL"
+,  "400% FPL or greater")
+kable(cbind(single_table(NSCH$povlev4_1920), Answer),caption = "Income based on federal poverty level status")
 ```
 
 # Children who were born in the United States: BornUSA_1920
 
 ```{r}
-Answer<- c("YES", "NO" , "MISSING")
+Answer<- c("Children were born in US", "Children were born outside of US", "MISSING")
 kable(cbind(single_table(NSCH$BornUSA_1920),Answer),caption = "Children who were born in the United States")
 ```
 
@@ -196,13 +203,14 @@ kable(cbind(single_table(NSCH$NbhdSupp_1920),Answer),caption = "Indicator 7.1: C
 # Children live in safe neighborhoods: NbhdSafe_1920
 
 ```{r}
-kable(cbind(single_table(NSCH$NbhdSafe_1920)),caption = "Indicator 7.2: Children live in safe neighborhoods")
+Answer<- c("Definitely agree","Somewhat agree" ,"Somewhat/Definitely disagree", "MISSING")
+kable(cbind(single_table(NSCH$NbhdSafe_1920),Answer),caption = "Indicator 7.2: Children live in safe neighborhoods")
 ```
 
 # Children who live in neighborhoods with a park or playground: park_1920
 
 ```{r}
-Answer<- c("YES", "NO" , "MISSING")
+Answer<- c("With a Park", "Without a Park" , "MISSING")
 kable(cbind(single_table(NSCH$park_1920),Answer),caption = "Children who live in neighborhoods with a park or playground")
 ```
 
@@ -225,7 +233,9 @@ kable(cbind(single_table(NSCH$library_1920),Answer),caption = "Children who live
 # Count of amenities in children's neighborhoods: NbhdAmenities_1920
 
 ```{r}
-kable(cbind(single_table(NSCH$NbhdAmenities_1920)),caption = "Indicator 7.4: Count of amenities in children's neighborhoods")
+Answer<- c("no amenities",  "1 amenity" , "2 amenities", "3 amenties", "all 4 amenities", "Missing to any of the questions")
+
+kable(cbind(single_table(NSCH$NbhdAmenities_1920), Answer),caption = "Indicator 7.4: Count of amenities in children's neighborhoods")
 ```
 
 # Outcome Variable
@@ -233,14 +243,14 @@ kable(cbind(single_table(NSCH$NbhdAmenities_1920)),caption = "Indicator 7.4: Cou
 # Needed Health Care Not Received: K4Q27
 
 ```{r}
-Answer<- c("YES", "NO" , "MISSING")
+Answer<- c("Did not receive needed health care",  "Received needed health care (or did not need health care)" , "MISSING")
 kable(cbind(single_table(NSCH$K4Q27),Answer),caption = "Needed Health Care Not Received")
 ```
 
 # Need a Referral: K5Q10
 
 ```{r}
-Answer<- c("YES", "NO" , "MISSING")
+Answer<- c("needing referrals", "not needing referrals" , "MISSING")
 kable(cbind(single_table(NSCH$K5Q10),Answer),caption = "Need a Referral")
 ```
 
@@ -249,5 +259,6 @@ kable(cbind(single_table(NSCH$K5Q10),Answer),caption = "Need a Referral")
 # screening tool, age 9-35 months: DevScrnng_1920
 
 ```{r}
-kable(cbind(single_table(NSCH$DevScrnng_1920)),caption = "Screen")
+Answer<- c(" Parent completed developmental screening", " Parent did not complete developmental screening" , "Children age 0-8 months or 3-5 years", "MISSING")
+kable(cbind(single_table(NSCH$DevScrnng_1920),Answer),caption = "Screen")
 ```
